@@ -2,7 +2,9 @@ import {useState,useEffect} from 'react'
 function ImagePopup(props) {
     const [last,setLast] = useState('');
     const {card,onClose} = props;
+    
     useEffect(() => card ? setLast(card) : null)
+
     return (
         <figure className={`popup popup_figure ${card ? 'visible' : null}`} onClick={onClose}>
             <div className="popup__container">
