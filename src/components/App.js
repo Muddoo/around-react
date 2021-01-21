@@ -29,12 +29,15 @@ function App() {
         setDeleteCard(card)
     }
     function closeAllPopups(e) {
-        if(e.target.classList.contains('popup') || e.target.classList.contains('popup__close')) {
             setAvatarPopup(false);
             setProfilePopup(false);
             setCardPopup(false);
             setSelectedCard('');
             setDeleteCard('')
+    }
+    function handleOverlayAndCrossClick(e) {
+        if(e.target.classList.contains('popup') || e.target.classList.contains('popup__close')) {
+            closeAllPopups()
         }
     }
 
@@ -53,7 +56,7 @@ function App() {
             title='Change profile picture' 
             name='profile-photo' 
             isOpen={avatarPopup}
-            onClose={closeAllPopups}
+            onClose={handleOverlayAndCrossClick}
             inputs={[['url','Image link','profile-image']]}
             submitText='Save'
         />
@@ -61,7 +64,7 @@ function App() {
             title='Edit profile' 
             name='profile-info' 
             isOpen={profilePopup}
-            onClose={closeAllPopups}
+            onClose={handleOverlayAndCrossClick}
             inputs={[['text','Name','name',2,40],['text','About me','about',2,200]]}
             submitText='Save'
         />
@@ -69,7 +72,7 @@ function App() {
             title='New place' 
             name='card' 
             isOpen={cardPopup}
-            onClose={closeAllPopups}
+            onClose={handleOverlayAndCrossClick}
             inputs={[['text','Title','title',2,30],['url','Image link','image']]}
             submitText='Create'
         />
@@ -77,12 +80,12 @@ function App() {
             title='Are you sure?' 
             name='delete' 
             isOpen={deleteCard}
-            onClose={closeAllPopups}
+            onClose={handleOverlayAndCrossClick}
             submitText='Yes'
         />
         <ImagePopup 
             card={selectedCard}
-            onClose={closeAllPopups}
+            onClose={handleOverlayAndCrossClick}
         />
     </div>
   );
