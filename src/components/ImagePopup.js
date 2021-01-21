@@ -1,10 +1,11 @@
+import {useState,useEffect} from 'react'
 function ImagePopup(props) {
-    const {card,onClose} = props
-
+    const {card,onClose} = props;
+    console.log(card)
     return (
-        <figure className={`popup popup_figure ${card ? 'visible' : null}`} onClick={onClose}>
+        <figure className={`popup popup_figure ${card._id ? 'visible' : null}`} onClick={onClose}>
             <div className="popup__container">
-                <img src={`${card.link}`} draggable="false" alt="popup image" className="popup__image" />
+                <img src={`${card && card.link}`} draggable="false" alt="popup image" className="popup__image" />
                 <p className="popup__caption">{card.name}</p>
                 <button className="popup__close popup__close_fig" aria-label="close-button" type="button" title="close"/>
             </div>

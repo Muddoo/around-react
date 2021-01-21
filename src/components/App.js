@@ -11,6 +11,7 @@ function App() {
     const [profilePopup,setProfilePopup] = useState(false);
     const [cardPopup,setCardPopup] = useState(false);
     const [selectedCard,setSelectedCard] = useState('');
+    const [lastCard,setLastCard] = useState({});
     const [deleteCard,setDeleteCard] = useState('');
 
     function handleEditAvatarClick() {
@@ -33,7 +34,8 @@ function App() {
             setAvatarPopup(false);
             setProfilePopup(false);
             setCardPopup(false);
-            setSelectedCard('')
+            setLastCard(selectedCard)
+            setSelectedCard('');
             setDeleteCard('')
         }
     }
@@ -81,7 +83,7 @@ function App() {
             submitText='Yes'
         />
         <ImagePopup 
-            card={selectedCard}
+            card={selectedCard || {link: lastCard.link, name: lastCard.name}}
             onClose={closeAllPopups}
         />
     </div>

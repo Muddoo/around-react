@@ -12,6 +12,7 @@
 
 .popup {
     --opacity: 0;
+    --opa: .5;
     --scale: scale(0.8);
     position: fixed;
     top: 0;
@@ -23,6 +24,6 @@
     place-items: center;
     background-color: rgba(0,0,0,.5);
     opacity: var(--opacity);
-    transition: opacity 0.23s ease-in 0s;
+    transition: opacity .4s ease-in 0s;
     pointer-events: none;
 }
