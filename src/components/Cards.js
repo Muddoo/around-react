@@ -1,16 +1,29 @@
-import APi from '../utils/Api'
+import Api from '../utils/Api'
+
 function Cards(props) {
     const {userId,cards,onCardClick,onCardDelete} = props;
 
     function isLiked({likes}) {
         return likes.some(like => like._id === userId) ? 'card__icon-heart_black animate' : null     
     }
+    
     function handleLike(e) {
-        //  console.log(e.target.closest('.card').dataset.id)
-        const likesNumer = e.target.nextElementSibling;
+        const likesNumber = e.target.nextElementSibling;
+        const method = e.target.classList.contains('card__icon-heart_black') ? 'DELETE' : 'PUT';
+        const options = {
+            query: `likes/${e.target.closest('.card').dataset.id}`,
+            method
+        };
         e.target.classList.toggle('card__icon-heart_black');
         e.target.classList.toggle('animate');
-        likesNumer.textContent = e.target.classList.contains('card__icon-heart_black') ? +likesNumer.textContent + 1 : +likesNumer.textContent - 1
+        likesNumber.textContent = method === 'PUT' ? +likesNumber.textContent + 1 : +likesNumber.textContent - 1;
+        Api.queryCards(options)
+           .catch(err => {
+               console.log(err);
+               e.target.classList.toggle('card__icon-heart_black');
+               e.target.classList.toggle('animate');
+               likesNumber.textContent = method === 'PUT' ? +likesNumber.textContent - 1 : +likesNumber.textContent + 1;
+           })
     }
     return (
         <section className="cards">

@@ -29,6 +29,7 @@ function Main(props) {
     }
 
     const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;
+
     return (
         <main>
             <section className={`profile ${isReady() ? null : 'hidden'}`} >
@@ -38,9 +39,14 @@ function Main(props) {
                 <div className="profile__info">
                     <h1 className="profile__name">{userName}</h1>
                     <p className="profile__text">{userDescription}</p>
-                    <button className="profile__edit-button" aria-label="edit-button" type="button" onClick={onEditProfile}></button>
+                    <button 
+                        className="profile__edit-button" 
+                        aria-label="edit-button" 
+                        type="button" 
+                        onClick={onEditProfile}
+                    />
                 </div>
-                <button className="profile__add-button" aria-label="close-button" type="button" onClick={onAddPlace}></button>
+                <button className="profile__add-button" aria-label="close-button" type="button" onClick={onAddPlace} />
             </section>
             <Cards 
                 cards={cards} 

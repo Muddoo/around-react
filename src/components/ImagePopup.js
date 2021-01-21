@@ -6,7 +6,7 @@ function ImagePopup(props) {
             <div className="popup__container">
                 <img src={`${card.link}`} draggable="false" alt="popup image" className="popup__image" />
                 <p className="popup__caption">{card.name}</p>
-                <button className="popup__close popup__close_fig" aria-label="close-button" type="button" title="close"></button>
+                <button className="popup__close popup__close_fig" aria-label="close-button" type="button" title="close"/>
             </div>
         </figure>
     )
