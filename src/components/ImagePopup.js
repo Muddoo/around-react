@@ -4,7 +4,7 @@ function ImagePopup(props) {
     const {card,onClose} = props;
     useEffect(() => card ? setLast(card) : null)
     return (
-        <figure className={`popup popup_figure ${card._id ? 'visible' : null}`} onClick={onClose}>
+        <figure className={`popup popup_figure ${card ? 'visible' : null}`} onClick={onClose}>
             <div className="popup__container">
                 <img src={last && last.link} draggable="false" alt="popup image" className="popup__image" />
                 <p className="popup__caption">{last.name}</p>
