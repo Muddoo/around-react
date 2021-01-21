@@ -25,7 +25,7 @@ function Main(props) {
     },[])
 
     function isReady() {
-        return userName && userDescription && userAvatar && cards.length && true
+        return userName && userDescription && userAvatar && true
     }
 
     const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;

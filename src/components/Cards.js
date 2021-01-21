@@ -1,7 +1,13 @@
+import {useState} from 'react'
 import Api from '../utils/Api'
 
 function Cards(props) {
     const {userId,cards,onCardClick,onCardDelete} = props;
+    const [isReady,setIsReady] = useState(0)
+
+    function show() {
+        return isReady === cards.length;
+    }
 
     function isLiked({likes}) {
         return likes.some(like => like._id === userId) ? 'card__icon-heart_black animate' : null     
@@ -26,7 +32,7 @@ function Cards(props) {
            })
     }
     return (
-        <section className="cards">
+        <section className={`cards ${show() ? null : 'hidden'}`}>
             {cards.map(card => (
                 <div className="card" key={card._id} data-id={card._id}>
                     <img 
@@ -35,6 +41,7 @@ function Cards(props) {
                         alt="card image" 
                         className="card__image" 
                         onClick={() => onCardClick(card)}
+                        onLoad={() => setIsReady(isReady+1)}
                     />
                     <div className="card__details">
                         <h2 className="card__text">{card.name}</h2>
