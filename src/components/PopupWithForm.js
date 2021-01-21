@@ -1,7 +1,7 @@
 import Input from './Input'
 
 function PopupWithForm(props) {
-    const {name,title,isOpen,onClose,submitText,inputs,children} = props
+    const {name,title,isOpen,onClose,submitText,inputs} = props
     return (
       <>  
         <div className={`popup popup_${name} ${isOpen ? 'visible' : null}`} onClick={onClose}>
