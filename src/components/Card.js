@@ -1,5 +1,5 @@
 function Card(props) {
-    const {card,onCardClick,handleReady,onCardDelete} = props;
+    const {card,onCardClick,handleReady,onCardDelete,isOwner,isLiked,onCardLike} = props;
     return (
         <div className="card" data-id={card._id}>
             <img 
@@ -13,10 +13,11 @@ function Card(props) {
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>
                 <button 
-                    className={`card__icon-heart`}
+                    className={`card__icon-heart ${isLiked(card) && 'card__icon-heart_black'}`}
                     type="button" 
                     aria-label="heart-button" 
                     title="like"
+                    onClick={() => onCardLike(card)}
                 />
                 <span className="card__likes">{card.likes.length}</span>
             </div>
@@ -25,7 +26,8 @@ function Card(props) {
                 type="button" 
                 aria-label="trash-button" 
                 title="delete"
-                onClick={(e) => onCardDelete(e.target.parentElement)}
+                onClick={(e) => onCardDelete(card)}
+                hidden={!isOwner(card)}
             />
         </div>
     )

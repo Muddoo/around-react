@@ -3,17 +3,20 @@ import Cards from './Cards'
 import api from '../utils/api'
 
 function Main(props) {
+    const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;
     const [userId,setUserId] = useState('')
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
     const [userAvatar,setUserAvatar] = useState('')
     const [cards,setCards] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
+    const [Liked,setLiked] = useState(false)
     
     useEffect(() => {
         Promise.all([api.getUser(),api.queryCards({})])
                .then(data => {
                    const [user,initialCards] = data;
+                   console.log('mm')
                    setUserId(user._id);
                    setUserName(user.name);
                    setUserDescription(user.about);
@@ -21,13 +24,36 @@ function Main(props) {
                    setCards(initialCards)
                })
                .catch(err => console.log(err))
-    },[])
+    })
+
+    // useEffect(() => {
+    //     if(Liked) {
+    //         const method = isLiked(Liked) ? 'DELETE' : 'PUT';
+    //         const options = {
+    //             query: `likes/${Liked._id}`,
+    //             method
+    //         }; 
+    //         api.queryCards(options)
+    //            .then(setCards([]))
+    //            .catch(err => console.log(err))
+    //     }
+    // },[Liked])
+
+    function handleCardLike(card) {
+        setLiked(card)
+    }
 
     function isReady() {
         return userName && userDescription && userAvatar && isLoaded && true
     }
 
-    const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;
+    function isOwner(card) {
+        return card.owner._id === userId
+    }
+
+    function isLiked(card) {
+        return card.likes.some(like => like._id === userId)
+    }
 
     return (
         <main>
@@ -56,8 +82,11 @@ function Main(props) {
             <Cards 
                 cards={cards} 
                 userId={userId} 
+                isOwner={isOwner}
+                isLiked={isLiked}
                 onCardClick={onCardClick} 
                 onCardDelete={onCardDelete}
+                onCardLike={handleCardLike}
             />
         </main>
     )

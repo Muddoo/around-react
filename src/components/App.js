@@ -28,7 +28,7 @@ function App() {
     function handleCardDelete(card) {
         setDeleteCard(card)
     }
-    function closeAllPopups(e) {
+    function closeAllPopups() {
             setAvatarPopup(false);
             setProfilePopup(false);
             setCardPopup(false);

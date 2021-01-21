@@ -2,7 +2,7 @@ import {useState} from 'react'
 import Card from './Card'
 
 function Cards(props) {
-    const {cards,onCardClick,onCardDelete} = props;
+    const {cards,onCardClick,onCardDelete,isOwner,isLiked,onCardLike} = props;
     const [isReady,setIsReady] = useState(0);
 
     function handleReady() {
@@ -22,6 +22,9 @@ function Cards(props) {
                     onCardClick={onCardClick} 
                     handleReady={handleReady} 
                     onCardDelete={onCardDelete} 
+                    isOwner={isOwner}
+                    isLiked={isLiked}
+                    onCardLike={onCardLike}
                 />
             ))}
         </section>
