@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import Api from '../utils/Api'
+import api from '../utils/api'
 
 function Cards(props) {
     const {userId,cards,onCardClick,onCardDelete} = props;
@@ -23,7 +23,7 @@ function Cards(props) {
         e.target.classList.toggle('card__icon-heart_black');
         e.target.classList.toggle('animate');
         likesNumber.textContent = method === 'PUT' ? +likesNumber.textContent + 1 : +likesNumber.textContent - 1;
-        Api.queryCards(options)
+        api.queryCards(options)
            .catch(err => {
                console.log(err);
                e.target.classList.toggle('card__icon-heart_black');

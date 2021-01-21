@@ -1,6 +1,6 @@
 import {useState,useEffect} from 'react'
 import Cards from './Cards'
-import Api from '../utils/Api'
+import api from '../utils/api'
 
 function Main(props) {
     const [userId,setUserId] = useState('')
@@ -11,7 +11,7 @@ function Main(props) {
     const [isLoaded,setIsLoaded] = useState(false)
     
     useEffect(() => {
-        Promise.all([Api.getUser(),Api.queryCards({})])
+        Promise.all([api.getUser(),api.queryCards({})])
                .then(data => {
                    const [user,initialCards] = data;
                    setUserId(user._id);
