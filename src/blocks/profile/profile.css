@@ -13,7 +13,7 @@
     color: var(--white);
     visibility: visible;
     opacity: 1;
-    transition: all .4s;
+    transition: all 1s .3s;
 }
 
 @media only screen and (max-width: 770px) {

@@ -8,24 +8,23 @@ function Main(props) {
     const [userDescription,setUserDescription] = useState('')
     const [userAvatar,setUserAvatar] = useState('')
     const [cards,setCards] = useState([])
+    const [isLoaded,setIsLoaded] = useState(false)
     
     useEffect(() => {
-        Api.getUser()
-        .then(user => {
-            setUserId(user._id);
-            setUserName(user.name);
-            setUserDescription(user.about);
-            setUserAvatar(user.avatar)
-        })
-        .catch(err => console.log(err));
-
-        Api.queryCards({})
-           .then(cards => setCards(cards))
-           .catch(err => console.log(err))
+        Promise.all([Api.getUser(),Api.queryCards({})])
+               .then(data => {
+                   const [user,initialCards] = data;
+                   setUserId(user._id);
+                   setUserName(user.name);
+                   setUserDescription(user.about);
+                   setUserAvatar(user.avatar);
+                   setCards(initialCards)
+               })
+               .catch(err => console.log(err))
     },[])
 
     function isReady() {
-        return userName && userDescription && userAvatar && true
+        return userName && userDescription && userAvatar && isLoaded && true
     }
 
     const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;
@@ -34,7 +33,13 @@ function Main(props) {
         <main>
             <section className={`profile ${isReady() ? null : 'hidden'}`} >
                 <div className="profile__wrapper" onClick={onEditAvatar}>
-                    <img src={userAvatar} draggable="false"  alt="profile image" className="profile__image" />
+                    <img 
+                        src={userAvatar} 
+                        draggable="false"  
+                        alt="profile image" 
+                        className="profile__image" 
+                        onLoad={() => setIsLoaded(true)}
+                    />
                 </div>
                 <div className="profile__info">
                     <h1 className="profile__name">{userName}</h1>
