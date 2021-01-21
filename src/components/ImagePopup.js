@@ -1,7 +1,6 @@
 import {useState,useEffect} from 'react'
 function ImagePopup(props) {
     const {card,onClose} = props;
-    console.log(card)
     return (
         <figure className={`popup popup_figure ${card._id ? 'visible' : null}`} onClick={onClose}>
             <div className="popup__container">
