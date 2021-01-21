@@ -1,0 +1,7 @@
+.visible {
+    --scale: scale(1);
+    --opacity: 1;
+    pointer-events: all;
+    /* backdrop-filter: blur(1.5px) grayscale(100%) sepia(1); */
+    transition: opacity 0s 0s, backdrop-filter 1s .15s;
+}
