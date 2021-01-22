@@ -6,6 +6,7 @@ function Cards(props) {
     const [isReady,setIsReady] = useState(0);
 
     function handleReady() {
+        if(isReady === cards.length) return setIsReady(1);
         setIsReady(isReady+1);
     }
 

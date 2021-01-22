@@ -12,15 +12,22 @@ function App() {
     const [cardPopup,setCardPopup] = useState(false);
     const [selectedCard,setSelectedCard] = useState('');
     const [deleteCard,setDeleteCard] = useState('');
+    const [avatarInfo,setAvatarInfo] = useState(null)
+    const [profileInfo,setProfileInfo] = useState(null)
+    const [cardInfo,setCardInfo] = useState(null)
 
     function handleEditAvatarClick() {
-        setAvatarPopup(true)
+        setAvatarPopup(!avatarPopup)
     }
     function handleEditProfileClick() {
-        setProfilePopup(true)
+        setProfilePopup(!profilePopup)
+    }
+    function submitProfileInfo(e,fields) {
+        e.preventDefault();
+        setProfileInfo(fields);
     }
     function handleAddPlaceClick() {
-        setCardPopup(true)
+        setCardPopup(!cardPopup)
     }
     function handleCardClick(card) {
         setSelectedCard(card)
@@ -33,7 +40,7 @@ function App() {
             setProfilePopup(false);
             setCardPopup(false);
             setSelectedCard('');
-            setDeleteCard('')
+            setDeleteCard('');
     }
     function handleOverlayAndCrossClick(e) {
         if(e.target.classList.contains('popup') || e.target.classList.contains('popup__close')) {
@@ -50,6 +57,9 @@ function App() {
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
             onCardDelete={handleCardDelete}
+            avatarInfo={avatarInfo}
+            profileInfo={profileInfo}
+            cardInfo={cardInfo}
         />
         <Footer />
         <PopupWithForm 
@@ -57,7 +67,7 @@ function App() {
             name='profile-photo' 
             isOpen={avatarPopup}
             onClose={handleOverlayAndCrossClick}
-            inputs={[['url','Image link','profile-image']]}
+            inputs={[{type:'url',placeholder:'Image link',name:'profile-image'}]}
             submitText='Save'
         />
         <PopupWithForm 
@@ -65,15 +75,16 @@ function App() {
             name='profile-info' 
             isOpen={profilePopup}
             onClose={handleOverlayAndCrossClick}
-            inputs={[['text','Name','name',2,40],['text','About me','about',2,200]]}
+            inputs={[{type:'text',placeholder:'Name',name:'name',min:2,max:40},{type:'text',placeholder:'About me',name:'about',min:2,max:200}]}
             submitText='Save'
+            submit={submitProfileInfo}
         />
         <PopupWithForm 
             title='New place' 
             name='card' 
             isOpen={cardPopup}
             onClose={handleOverlayAndCrossClick}
-            inputs={[['text','Title','title',2,30],['url','Image link','image']]}
+            inputs={[{type:'text',placeholder:'Title',name:'title',min:2,max:30},{type:'url',placeholder:'Image link',name:'image'}]}
             submitText='Create'
         />
         <PopupWithForm 
@@ -82,6 +93,7 @@ function App() {
             isOpen={deleteCard}
             onClose={handleOverlayAndCrossClick}
             submitText='Yes'
+            state='active'
         />
         <ImagePopup 
             card={selectedCard}

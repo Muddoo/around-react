@@ -3,7 +3,7 @@ import Cards from './Cards'
 import api from '../utils/api'
 
 function Main(props) {
-    const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete} = props;
+    const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete,avatarInfo,profileInfo,cardInfo,reset} = props;
     const [userId,setUserId] = useState('')
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
@@ -16,7 +16,6 @@ function Main(props) {
         Promise.all([api.getUser(),api.queryCards({})])
                .then(data => {
                    const [user,initialCards] = data;
-                   console.log('mm')
                    setUserId(user._id);
                    setUserName(user.name);
                    setUserDescription(user.about);
@@ -24,20 +23,46 @@ function Main(props) {
                    setCards(initialCards)
                })
                .catch(err => console.log(err))
-    })
+    },[])
 
-    // useEffect(() => {
-    //     if(Liked) {
-    //         const method = isLiked(Liked) ? 'DELETE' : 'PUT';
-    //         const options = {
-    //             query: `likes/${Liked._id}`,
-    //             method
-    //         }; 
-    //         api.queryCards(options)
-    //            .then(setCards([]))
-    //            .catch(err => console.log(err))
-    //     }
-    // },[Liked])
+    useEffect(() => {
+        if(Liked) {
+            const method = isLiked(Liked) ? 'DELETE' : 'PUT';
+            const options = {
+                query: `likes/${Liked._id}`,
+                method
+            }; 
+            const newCards = cards.map(card => {
+                const newLikes =  method === 'PUT' ? [...Liked.likes,{_id: userId}] : Liked.likes.filter(like => like._id !== userId)
+                if(Liked._id === card._id) return {...card,likes: newLikes}
+                return card
+            });
+                  setCards(newCards)
+            api.queryCards(options)
+            //    .then(res => {
+            //        const newCards = cards.map(card => card._id === res._id ? res : card);
+            //        setCards(newCards)
+            //    })
+               .catch(err => {
+                   console.log(err);
+                   setCards(cards)
+                })
+        }
+    },[Liked])
+
+    useEffect(() => {
+        if(profileInfo) {
+            const options = {body: profileInfo};
+            api.updateProfile(options)
+           .then(user => {
+            setUserName(user.name);
+            setUserDescription(user.about);
+            onEditProfile();
+           })
+           .catch(err => console.log(err));
+        }
+    },[avatarInfo,profileInfo,cardInfo])
+
 
     function handleCardLike(card) {
         setLiked(card)

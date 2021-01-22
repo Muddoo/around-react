@@ -1,14 +1,57 @@
+import {useState,useEffect} from 'react'
 import Input from './Input'
 
 function PopupWithForm(props) {
-    const {name,title,isOpen,onClose,submitText,inputs} = props
+    const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
+
+    const [fields,setFields] = useState({});
+    const [errors,setErrors] = useState({});
+    const [buttonText,setEButtonText] = useState(submitText);
+
+    useEffect(() => {
+      const fieldsObj = {};
+      const errorObj = {}
+      inputs?.forEach(({name}) => {
+        fieldsObj[name] = '';
+        errorObj[name] = '';
+      })
+      setFields(fieldsObj);
+      setErrors(errorObj);
+      setEButtonText(submitText);
+      if(!isOpen && inputs) {
+        const reset = {}
+        inputs.forEach(({name}) => reset[name] = '');
+        setFields(reset);
+      }
+    },[isOpen])
+
+    function handleChange(e,name) {
+      setFields({... fields, [name]: e.target.value.trim() ? e.target.value : ''})
+      setErrors({...errors, [name]: e.target.validationMessage})
+    }
+
+    function setButtonState() {
+        const isField = Object.values(fields).every(field => field !== '');
+        const isError =  Object.values(errors).some(error => error !== '');
+        return !isField || isError;
+    }
+    
     return (
-      <>  
-        <div className={`popup popup_${name} ${isOpen ? 'visible' : null}`} onClick={onClose}>
-            <form action="#" className="popup__form" name={name} noValidate>
+        <div 
+          className={`popup popup_${name} 
+          ${isOpen && 'visible'}`} 
+          onClick={onClose}
+        >
+            <form 
+              action="#" 
+              className="popup__form"
+              name={name}
+              noValidate
+              onSubmit={e => submit(e,fields)}
+            >
                 <button className="popup__close" aria-label="close-button" type="button"></button>
                 <h3 className="popup__header">{title}</h3>
-                {inputs && inputs.map(([type,placeholder,name,min,max],i) => (
+                {inputs && inputs.map(({type,placeholder,name,min,max},i) => (
                   <Input 
                     key={i} 
                     type={type} 
@@ -16,12 +59,22 @@ function PopupWithForm(props) {
                     name={name}
                     min={min}
                     max={max}
+                    value={fields[name] || ''}
+                    error={errors[name] || ''}
+                    handleChange={handleChange}
                   />
                 ))}
-                <button type="submit" className="popup__submit active" aria-label="submit-button">{submitText}</button>
+                <button 
+                  type="submit" 
+                  className={`popup__submit ${setButtonState() && 'inactive'}`}
+                  aria-label="submit-button"
+                  disabled={setButtonState()}
+                  onClick={() => setEButtonText('Saving...')}
+                >
+                    {buttonText}
+                </button>
             </form>
         </div>
-      </>
     )
 }
 

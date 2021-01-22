@@ -11,7 +11,7 @@ class Api {
     }
 
     async getUser() {
-        const res = await fetch(`${this._baseUrl}/users/me`,this._options);
+        const res = await fetch(`${this._baseUrl}/users/me`,{...this._options,method: 'GET'});
         return res.ok ? res.json() : Promise.reject(`Error: ${res.status} - ${res.statusText} - ${res.url}`);
     }
 

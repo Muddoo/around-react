@@ -13,7 +13,7 @@ function Card(props) {
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>
                 <button 
-                    className={`card__icon-heart ${isLiked(card) && 'card__icon-heart_black'}`}
+                    className={`card__icon-heart ${isLiked(card) && 'card__icon-heart_black animate'}`}
                     type="button" 
                     aria-label="heart-button" 
                     title="like"

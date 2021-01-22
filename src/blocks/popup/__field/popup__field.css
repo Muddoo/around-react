@@ -4,17 +4,32 @@
     margin: 13px auto 0;
     border: none;
     border-bottom: 1px solid rgba(71, 46, 46, .2);
+    border-radius: 10px;
     outline: none;
     font-size: 14px;
     line-height: 17px;
     color: black;
     box-sizing: border-box;
-    padding-top: 0;
+    padding-left: 10px;
+    padding-top: 9px;
     padding-bottom: calc(27.34px - 16.66px - 1px);
 }
 .popup__field:nth-of-type(1) {
     margin-top: 0;
     padding-bottom: calc(27.26px - 16.66px - 1px);
+}
+.popup__field:focus {
+    border-bottom: 2px solid black;
+    border-left: 1.5px solid black;
+    background-color: rgb(253, 231, 201);
+}
+.popup__field:focus::placeholder {
+    color: rgba(124, 113, 52, 0.7);
+}
+.popup__field:not(:focus):not(:placeholder-shown):valid {
+    background-color: rgba(155, 214, 121, 0.822);
+    border-bottom: 2px solid black;
+    border-left: 1.5px solid black;
 }
 
 
