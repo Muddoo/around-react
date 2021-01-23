@@ -3,7 +3,15 @@ import Cards from './Cards'
 import api from '../utils/api'
 
 function Main(props) {
-    const {onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete,avatarInfo,profileInfo,cardInfo,reset} = props;
+    const {onEditAvatar,
+           onEditProfile,
+           onAddPlace,
+           onCardClick,
+           onCardDelete,
+           avatarInfo,
+           profileInfo,
+           newPlace,
+           deletePlace} = props;
     const [userId,setUserId] = useState('')
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
@@ -11,6 +19,7 @@ function Main(props) {
     const [cards,setCards] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
     const [Liked,setLiked] = useState(false)
+    const [deleteCard,setDeleteCard] = useState(false)
     
     useEffect(() => {
         Promise.all([api.getUser(),api.queryCards({})])
@@ -26,6 +35,46 @@ function Main(props) {
     },[])
 
     useEffect(() => {
+        if(profileInfo) {
+            const options = {body: profileInfo};
+            api.updateProfile(options)
+           .then(user => {
+                setUserName(user.name);
+                setUserDescription(user.about);
+                onEditProfile();
+           })
+           .catch(err => console.log(err));
+        };
+        if(avatarInfo) {
+            const options = {
+                avatar: 'avatar',
+                body: avatarInfo
+            };
+            api.updateProfile(options)
+            .then(({avatar}) => {
+                setUserAvatar(avatar);
+                onEditAvatar();
+            })
+            .catch(err => console.log(err));
+        };
+        if(newPlace) {
+            const options = {
+                method: 'POST',
+                body: newPlace
+            };
+            api.queryCards(options)
+            .then(place => {
+                setCards([place,...cards]);
+                onAddPlace();
+            })
+            .catch(err => console.log(err));
+        };
+        if(deletePlace) {
+            const newCards = cards.filter(card => card._id !== deleteCard._id);
+            setCards(newCards);
+            onCardDelete();
+            console.log(cards,newCards)
+        }
         if(Liked) {
             const method = isLiked(Liked) ? 'DELETE' : 'PUT';
             const options = {
@@ -48,24 +97,16 @@ function Main(props) {
                    setCards(cards)
                 })
         }
-    },[Liked])
-
-    useEffect(() => {
-        if(profileInfo) {
-            const options = {body: profileInfo};
-            api.updateProfile(options)
-           .then(user => {
-            setUserName(user.name);
-            setUserDescription(user.about);
-            onEditProfile();
-           })
-           .catch(err => console.log(err));
-        }
-    },[avatarInfo,profileInfo,cardInfo])
+    },[avatarInfo,profileInfo,newPlace,Liked,deletePlace])
 
 
     function handleCardLike(card) {
         setLiked(card)
+    }
+
+    function handleCardDelete(card) {
+        onCardDelete();
+        setDeleteCard(card);
     }
 
     function isReady() {
@@ -110,7 +151,7 @@ function Main(props) {
                 isOwner={isOwner}
                 isLiked={isLiked}
                 onCardClick={onCardClick} 
-                onCardDelete={onCardDelete}
+                onCardDelete={handleCardDelete}
                 onCardLike={handleCardLike}
             />
         </main>

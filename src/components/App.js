@@ -10,37 +10,50 @@ function App() {
     const [avatarPopup,setAvatarPopup] = useState(false);
     const [profilePopup,setProfilePopup] = useState(false);
     const [cardPopup,setCardPopup] = useState(false);
-    const [selectedCard,setSelectedCard] = useState('');
-    const [deleteCard,setDeleteCard] = useState('');
+    const [deletePopup,setDeletePopup] = useState(false);
+    const [deletePlace,setDeletePlace] = useState(false);
+    const [selectedCard,setSelectedCard] = useState(null);
     const [avatarInfo,setAvatarInfo] = useState(null)
     const [profileInfo,setProfileInfo] = useState(null)
-    const [cardInfo,setCardInfo] = useState(null)
+    const [newPlace,setNewPlace] = useState(null)
 
     function handleEditAvatarClick() {
-        setAvatarPopup(!avatarPopup)
+        setAvatarPopup(!avatarPopup);
+        setAvatarInfo(null)
+    }
+    function submitAvatar(field) {
+        setAvatarInfo(field);
     }
     function handleEditProfileClick() {
         setProfilePopup(!profilePopup)
+        setProfileInfo(null)
     }
-    function submitProfileInfo(e,fields) {
-        e.preventDefault();
+    function submitProfileInfo(fields) {
         setProfileInfo(fields);
     }
     function handleAddPlaceClick() {
         setCardPopup(!cardPopup)
+        setNewPlace(null)
+    }
+    function submitNewPlace(fields) {
+        setNewPlace(fields);
     }
     function handleCardClick(card) {
         setSelectedCard(card)
     }
-    function handleCardDelete(card) {
-        setDeleteCard(card)
+    function handleCardDelete() {
+        setDeletePopup(!deletePopup);
+        setDeletePlace(null)
+    }
+    function submitDelete() {
+        setDeletePlace(true)
     }
     function closeAllPopups() {
             setAvatarPopup(false);
             setProfilePopup(false);
             setCardPopup(false);
+            setDeletePopup(false);
             setSelectedCard('');
-            setDeleteCard('');
     }
     function handleOverlayAndCrossClick(e) {
         if(e.target.classList.contains('popup') || e.target.classList.contains('popup__close')) {
@@ -59,16 +72,18 @@ function App() {
             onCardDelete={handleCardDelete}
             avatarInfo={avatarInfo}
             profileInfo={profileInfo}
-            cardInfo={cardInfo}
+            newPlace={newPlace}
+            deletePlace={deletePlace}
         />
         <Footer />
         <PopupWithForm 
             title='Change profile picture' 
-            name='profile-photo' 
+            name='avatar' 
             isOpen={avatarPopup}
             onClose={handleOverlayAndCrossClick}
-            inputs={[{type:'url',placeholder:'Image link',name:'profile-image'}]}
+            inputs={[{type:'url',placeholder:'Image link',name:'avatar'}]}
             submitText='Save'
+            submit={submitAvatar}
         />
         <PopupWithForm 
             title='Edit profile' 
@@ -84,16 +99,17 @@ function App() {
             name='card' 
             isOpen={cardPopup}
             onClose={handleOverlayAndCrossClick}
-            inputs={[{type:'text',placeholder:'Title',name:'title',min:2,max:30},{type:'url',placeholder:'Image link',name:'image'}]}
+            inputs={[{type:'text',placeholder:'Title',name:'name',min:2,max:30},{type:'url',placeholder:'Image link',name:'link'}]}
             submitText='Create'
+            submit={submitNewPlace}
         />
         <PopupWithForm 
             title='Are you sure?' 
             name='delete' 
-            isOpen={deleteCard}
+            isOpen={deletePopup}
             onClose={handleOverlayAndCrossClick}
             submitText='Yes'
-            state='active'
+            submit={submitDelete}
         />
         <ImagePopup 
             card={selectedCard}

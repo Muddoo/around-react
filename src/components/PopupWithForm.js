@@ -6,7 +6,7 @@ function PopupWithForm(props) {
 
     const [fields,setFields] = useState({});
     const [errors,setErrors] = useState({});
-    const [buttonText,setEButtonText] = useState(submitText);
+    const [buttonText,setButtonText] = useState(submitText);
 
     useEffect(() => {
       const fieldsObj = {};
@@ -17,7 +17,7 @@ function PopupWithForm(props) {
       })
       setFields(fieldsObj);
       setErrors(errorObj);
-      setEButtonText(submitText);
+      setButtonText(submitText);
       if(!isOpen && inputs) {
         const reset = {}
         inputs.forEach(({name}) => reset[name] = '');
@@ -30,6 +30,12 @@ function PopupWithForm(props) {
       setErrors({...errors, [name]: e.target.validationMessage})
     }
 
+    function handleSubmit(e) {
+      e.preventDefault();
+      submit(fields);
+      setButtonText('Saving...')
+    }
+
     function setButtonState() {
         const isField = Object.values(fields).every(field => field !== '');
         const isError =  Object.values(errors).some(error => error !== '');
@@ -38,8 +44,7 @@ function PopupWithForm(props) {
     
     return (
         <div 
-          className={`popup popup_${name} 
-          ${isOpen && 'visible'}`} 
+          className={`popup popup_${name} ${isOpen && 'visible'}`} 
           onClick={onClose}
         >
             <form 
@@ -47,7 +52,7 @@ function PopupWithForm(props) {
               className="popup__form"
               name={name}
               noValidate
-              onSubmit={e => submit(e,fields)}
+              onSubmit={handleSubmit}
             >
                 <button className="popup__close" aria-label="close-button" type="button"></button>
                 <h3 className="popup__header">{title}</h3>
@@ -69,7 +74,7 @@ function PopupWithForm(props) {
                   className={`popup__submit ${setButtonState() && 'inactive'}`}
                   aria-label="submit-button"
                   disabled={setButtonState()}
-                  onClick={() => setEButtonText('Saving...')}
+                  // onClick={() => setButtonText('Saving...')}
                 >
                     {buttonText}
                 </button>

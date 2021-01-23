@@ -11,11 +11,14 @@ function Cards(props) {
     }
 
     function show() {
+        console.log(isReady,cards.length)
         return isReady === cards.length;
     }
 
+    show()
+
     return (
-        <section className={`cards ${show() ? null : 'hidden'}`}>
+        <section className={`cards`}>
             {cards.map(card => ( 
                 <Card 
                     key={card._id} 

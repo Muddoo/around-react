@@ -26,7 +26,7 @@ function Card(props) {
                 type="button" 
                 aria-label="trash-button" 
                 title="delete"
-                onClick={(e) => onCardDelete(card)}
+                onClick={() => onCardDelete(card)}
                 hidden={!isOwner(card)}
             />
         </div>
