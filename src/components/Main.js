@@ -80,12 +80,17 @@ function Main(props) {
         if(deletePlace) {
             const newCards = cards.filter(card => card._id !== deleteCard._id);
             setCards(newCards);
-            onCardDelete();
             const options = {
             query: deleteCard._id,
             method: 'DELETE'
             };
-            api.queryCards(options).catch(err => console.log(err));
+            api.queryCards(options)
+               .then(() => onCardDelete())
+               .catch(err => {
+                    console.log(err);
+                    setCards(cards);
+                    onCardDelete();
+                });
         }
     },[deletePlace])
     useEffect(() => {
@@ -107,10 +112,6 @@ function Main(props) {
                 method
             }; 
             api.queryCards(options)
-            //    .then(res => {
-            //        const newCards = cards.map(card => card._id === res._id ? res : card);
-            //        setCards(newCards)
-            //    })
                .catch(err => {
                    console.log(err);
                    setCards(cards)
