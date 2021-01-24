@@ -1,9 +1,10 @@
-import {useState,useEffect} from 'react'
+import {useState,useEffect,createRef} from 'react'
 import Input from './Input'
 
 function PopupWithForm(props) {
     const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
 
+    const form = createRef();
     const [fields,setFields] = useState({});
     const [errors,setErrors] = useState({});
     const [buttonText,setButtonText] = useState(submitText);
@@ -23,6 +24,7 @@ function PopupWithForm(props) {
         inputs.forEach(({name}) => reset[name] = '');
         setFields(reset);
       }
+      form.current.focus();
     },[isOpen])
 
     function handleChange(e,name) {
@@ -54,7 +56,7 @@ function PopupWithForm(props) {
               noValidate
               onSubmit={handleSubmit}
             >
-                <button className="popup__close" aria-label="close-button" type="button"></button>
+                <button className="popup__close" aria-label="close-button" type="button" />
                 <h3 className="popup__header">{title}</h3>
                 {inputs && inputs.map(({type,placeholder,name,min,max},i) => (
                   <Input 
@@ -74,7 +76,7 @@ function PopupWithForm(props) {
                   className={`popup__submit ${setButtonState() && 'inactive'}`}
                   aria-label="submit-button"
                   disabled={setButtonState()}
-                  // onClick={() => setButtonText('Saving...')}
+                  ref={form}
                 >
                     {buttonText}
                 </button>

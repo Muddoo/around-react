@@ -1,5 +1,5 @@
 function Card(props) {
-    const {card,onCardClick,handleReady,onCardDelete,isOwner,isLiked,onCardLike} = props;
+    const {card,onCardClick,handleReady,onCardDelete,isOwner,isLiked,onCardLike,onImageFailure} = props;
     return (
         <div className="card" data-id={card._id}>
             <img 
@@ -9,6 +9,7 @@ function Card(props) {
                 className="card__image" 
                 onClick={() => onCardClick(card)}
                 onLoad={handleReady}
+                onError={() => onImageFailure(card)}
             />
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>

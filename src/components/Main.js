@@ -16,10 +16,12 @@ function Main(props) {
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
     const [userAvatar,setUserAvatar] = useState('')
+    const [originalAvatar,setOriginalAvatar] = useState('')
     const [cards,setCards] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
     const [Liked,setLiked] = useState(false)
     const [deleteCard,setDeleteCard] = useState(false)
+    const [unLoadedImage,setUnloadedImage] = useState(false)
     
     useEffect(() => {
         Promise.all([api.getUser(),api.queryCards({})])
@@ -35,16 +37,6 @@ function Main(props) {
     },[])
 
     useEffect(() => {
-        if(profileInfo) {
-            const options = {body: profileInfo};
-            api.updateProfile(options)
-           .then(user => {
-                setUserName(user.name);
-                setUserDescription(user.about);
-                onEditProfile();
-           })
-           .catch(err => console.log(err));
-        };
         if(avatarInfo) {
             const options = {
                 avatar: 'avatar',
@@ -57,6 +49,20 @@ function Main(props) {
             })
             .catch(err => console.log(err));
         };
+    },[avatarInfo])
+    useEffect(() => {
+        if(profileInfo) {
+            const options = {body: profileInfo};
+            api.updateProfile(options)
+           .then(user => {
+                setUserName(user.name);
+                setUserDescription(user.about);
+                onEditProfile();
+           })
+           .catch(err => console.log(err));
+        };
+    },[profileInfo])
+    useEffect(() => {
         if(newPlace) {
             const options = {
                 method: 'POST',
@@ -69,24 +75,37 @@ function Main(props) {
             })
             .catch(err => console.log(err));
         };
+    },[newPlace])
+    useEffect(() => {
         if(deletePlace) {
             const newCards = cards.filter(card => card._id !== deleteCard._id);
             setCards(newCards);
             onCardDelete();
-            console.log(cards,newCards)
+            const options = {
+            query: deleteCard._id,
+            method: 'DELETE'
+            };
+            api.queryCards(options).catch(err => console.log(err));
         }
+    },[deletePlace])
+    useEffect(() => {
+        if(unLoadedImage) {
+            const newCards = cards.filter(card => card._id !== unLoadedImage._id);
+            setCards(newCards);
+            const options = {
+                query: unLoadedImage._id,
+                method: 'DELETE'
+              };
+            api.queryCards(options).catch(err => console.log(err));
+        }
+    },[unLoadedImage])
+    useEffect(() => {
         if(Liked) {
             const method = isLiked(Liked) ? 'DELETE' : 'PUT';
             const options = {
                 query: `likes/${Liked._id}`,
                 method
             }; 
-            const newCards = cards.map(card => {
-                const newLikes =  method === 'PUT' ? [...Liked.likes,{_id: userId}] : Liked.likes.filter(like => like._id !== userId)
-                if(Liked._id === card._id) return {...card,likes: newLikes}
-                return card
-            });
-                  setCards(newCards)
             api.queryCards(options)
             //    .then(res => {
             //        const newCards = cards.map(card => card._id === res._id ? res : card);
@@ -96,8 +115,14 @@ function Main(props) {
                    console.log(err);
                    setCards(cards)
                 })
+            const newCards = cards.map(card => {
+                const newLikes =  method === 'PUT' ? [...Liked.likes,{_id: userId}] : Liked.likes.filter(like => like._id !== userId)
+                if(Liked._id === card._id) return {...card,likes: newLikes}
+                return card
+            });
+            setCards(newCards)    
         }
-    },[avatarInfo,profileInfo,newPlace,Liked,deletePlace])
+    },[Liked])
 
 
     function handleCardLike(card) {
@@ -109,7 +134,29 @@ function Main(props) {
         setDeleteCard(card);
     }
 
-    function isReady() {
+    function handleUnloadedImage(card) {
+        setUnloadedImage(card);
+    }
+
+    function handleLoadedAvatar() {
+        setIsLoaded(true);
+        setOriginalAvatar(userAvatar);
+    }
+
+    function handleUnloadedAvatar() {
+        if(!originalAvatar) return;
+        const options = {
+            avatar: 'avatar',
+            body: {avatar: originalAvatar}
+        };
+        api.updateProfile(options)
+        .then(({avatar}) => {
+            setUserAvatar(avatar);
+        })
+        .catch(err => console.log(err));
+    }
+
+    function profileShow() {
         return userName && userDescription && userAvatar && isLoaded && true
     }
 
@@ -123,14 +170,15 @@ function Main(props) {
 
     return (
         <main>
-            <section className={`profile ${isReady() ? null : 'hidden'}`} >
+            <section className={`profile ${profileShow() ? null : ''}`} >
                 <div className="profile__wrapper" onClick={onEditAvatar}>
                     <img 
                         src={userAvatar} 
                         draggable="false"  
                         alt="profile image" 
                         className="profile__image" 
-                        onLoad={() => setIsLoaded(true)}
+                        onLoad={handleLoadedAvatar}
+                        onError={handleUnloadedAvatar}
                     />
                 </div>
                 <div className="profile__info">
@@ -153,6 +201,7 @@ function Main(props) {
                 onCardClick={onCardClick} 
                 onCardDelete={handleCardDelete}
                 onCardLike={handleCardLike}
+                onImageFailure={handleUnloadedImage}
             />
         </main>
     )
