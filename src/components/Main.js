@@ -170,7 +170,7 @@ function Main(props) {
 
     return (
         <main>
-            <section className={`profile ${profileShow() ? null : ''}`} >
+            <section className={`profile ${profileShow() ? null : 'hidden'}`} >
                 <div className="profile__wrapper" onClick={onEditAvatar}>
                     <img 
                         src={userAvatar} 

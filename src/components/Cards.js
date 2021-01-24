@@ -15,7 +15,7 @@ function Cards(props) {
     }
 
     return (
-        <section className={`cards ${!show() && ''}`}>
+        <section className={`cards ${!show() && 'hidden'}`}>
             {cards.map((card,i) => ( 
                 <Card 
                     key={card._id} 

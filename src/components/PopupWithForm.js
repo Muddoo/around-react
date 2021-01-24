@@ -10,21 +10,23 @@ function PopupWithForm(props) {
     const [buttonText,setButtonText] = useState(submitText);
 
     useEffect(() => {
-      const fieldsObj = {};
-      const errorObj = {}
-      inputs?.forEach(({name}) => {
-        fieldsObj[name] = '';
-        errorObj[name] = '';
-      })
-      setFields(fieldsObj);
-      setErrors(errorObj);
-      setButtonText(submitText);
-      if(!isOpen && inputs) {
-        const reset = {}
-        inputs.forEach(({name}) => reset[name] = '');
-        setFields(reset);
+      if(isOpen) {
+        const fieldsObj = {};
+        const errorObj = {}
+        inputs?.forEach(({name}) => {
+          fieldsObj[name] = '';
+          errorObj[name] = '';
+        })
+        setFields(fieldsObj);
+        setErrors(errorObj);
+        setButtonText(submitText);
+        if(!isOpen && inputs) {
+          const reset = {}
+          inputs.forEach(({name}) => reset[name] = '');
+          setFields(reset);
+        }
+        form.current.focus();
       }
-      form.current.focus();
     },[isOpen])
 
     function handleChange(e,name) {
