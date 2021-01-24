@@ -1,6 +1,7 @@
 .cards {
     display: grid;
     max-width: 882px;
+    min-height: 50vh;
     margin: 50px auto 66px;
     row-gap: 20px;
     column-gap: 18px;
@@ -11,6 +12,7 @@
 
 @media only screen and (max-width: 770px) {
     .cards {
+        min-height: 25vh;
         margin: 36px auto 48px;
     }
 }
