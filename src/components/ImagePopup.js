@@ -15,7 +15,7 @@ function ImagePopup(props) {
                     draggable="false" 
                     alt="popup image" 
                     className="popup__image" 
-                    onClick={() => imagePopupClick(card)}
+                    onClick={imagePopupClick}
                 />
                 <p className="popup__caption">{last.name}</p>
                 <button className="popup__close popup__close_fig" aria-label="close-button" type="button" title="close"/>

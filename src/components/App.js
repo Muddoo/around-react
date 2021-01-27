@@ -41,8 +41,8 @@ function App() {
             closeAllPopups()
         }
     }
-    function handleImagePopupClick(card) {
-        const index = cards.indexOf(card) + 1;
+    function handleImagePopupClick() {
+        const index = cards.indexOf(selectedCard) + 1;
         if(index === cards.length) return setSelectedCard(cards[0])
         setSelectedCard(cards[index])
     }
