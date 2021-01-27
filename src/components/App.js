@@ -7,6 +7,7 @@ import PopupWithForm from './PopupWithForm'
 import ImagePopup from './ImagePopup'
 
 function App() {
+    const [cards,setCards] = useState([]);
     const [avatarPopup,setAvatarPopup] = useState(false);
     const [profilePopup,setProfilePopup] = useState(false);
     const [cardPopup,setCardPopup] = useState(false);
@@ -40,6 +41,11 @@ function App() {
             closeAllPopups()
         }
     }
+    function handleImagePopupClick(card) {
+        const index = cards.indexOf(card) + 1;
+        if(index === cards.length) return setSelectedCard(cards[0])
+        setSelectedCard(cards[index])
+    }
 
   return (
     <div className="page">
@@ -50,6 +56,7 @@ function App() {
             onAddPlace={handleAddPlaceClick}
             onCardDelete={handleCardDelete}
             onCardClick={handleCardClick}
+            cardsInfo={setCards}
         />
         <Footer />
         <PopupWithForm 
@@ -86,6 +93,7 @@ function App() {
         <ImagePopup 
             card={selectedCard}
             onClose={handleOverlayAndCrossClick}
+            imagePopupClick={handleImagePopupClick}
         />
     </div>
   );

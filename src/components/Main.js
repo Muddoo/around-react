@@ -7,7 +7,8 @@ function Main(props) {
            onEditProfile,
            onAddPlace,
            onCardClick,
-           onCardDelete} = props;
+           onCardDelete,
+           cardsInfo} = props;
     const [userId,setUserId] = useState('')
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
@@ -25,6 +26,7 @@ function Main(props) {
                    setUserDescription(user.about);
                    setUserAvatar(user.avatar);
                    setCards(initialCards)
+                   cardsInfo(initialCards)
                })
                .catch(err => console.log(err))
     },[])
