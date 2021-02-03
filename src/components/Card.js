@@ -1,22 +1,31 @@
+import {useContext} from 'react'
+import CurrentUserContext from '../contexts/CurrentUserContext'
 function Card(props) {
-    const {card,onCardClick,handleReady,onCardDelete} = props;
+    const {card,onCardClick,onCardDelete,onCardLike} = props;
+
+
+    const user = useContext(CurrentUserContext);
+
+    const isOwner = user._id === card.owner._id;
+    const isLiked = card.likes.some(data => data._id === user._id);
+
     return (
-        <div className="card" data-id={card._id}>
+        <div className="card">
             <img 
                 src={card.link} 
                 draggable="false" 
                 alt="card image" 
                 className="card__image" 
                 onClick={() => onCardClick(card)}
-                onLoad={handleReady}
             />
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>
                 <button 
-                    className={`card__icon-heart`}
+                    className={`card__icon-heart ${isLiked && 'card__icon-heart_black animate'}`}
                     type="button" 
                     aria-label="heart-button" 
                     title="like"
+                    onClick={() => onCardLike(card)}
                 />
                 <span className="card__likes">{card.likes.length}</span>
             </div>
@@ -25,7 +34,8 @@ function Card(props) {
                 type="button" 
                 aria-label="trash-button" 
                 title="delete"
-                onClick={(e) => onCardDelete(e.target.parentElement)}
+                onClick={() => onCardDelete(card)}
+                hidden={!isOwner}
             />
         </div>
     )
