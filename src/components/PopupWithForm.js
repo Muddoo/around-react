@@ -2,7 +2,7 @@ import {useState,useEffect,useRef} from 'react'
 import Input from './Input'
 
 function PopupWithForm(props) {
-    const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
+    const {name,title,isOpen,onClose,submitText,inputs} = props;
 
     const form = useRef();
     const [fields,setFields] = useState({});

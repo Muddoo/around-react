@@ -1,7 +1,7 @@
 function Card(props) {
     const {card,onCardClick,handleReady,onCardDelete,isOwner,isLiked,onCardLike,onImageFailure} = props;
     return (
-        <div className="card" data-id={card._id}>
+        <div className="card">
             <img 
                 src={card.link} 
                 draggable="false" 
