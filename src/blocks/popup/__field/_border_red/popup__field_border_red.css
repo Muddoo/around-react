@@ -1,5 +1,0 @@
-.popup__field_border_red, .popup__field_border_red:focus {
-    background-color: rgba(247, 182, 96, 0.5);
-    border-bottom: 2px solid red;
-    border-left: 2px solid red;
-}
