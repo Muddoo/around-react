@@ -85,6 +85,7 @@ function Main(props) {
             api.queryCards(options)
                .then(place => {
                     setCards([place,...cards]);
+                    cardsInfo([place,...cards]);
                     onAddPlace(false);
                 })
                .catch(err => console.log(err));
