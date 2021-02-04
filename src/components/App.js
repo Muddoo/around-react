@@ -129,10 +129,26 @@ function App() {
                 onCardLike={handleLikeClick}
             />
             <Footer />
-            <EditAvatarPopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={handleUserAvatarUpdate} />
-            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={handleUserInfoUpdate} />
-            <AddPlacePopup isOpen={cardPopup} onClose={handleOverlayAndCrossClick} submit={handleAddPlaceSubmit} />
-            <DeletePlacePopup isOpen={deletePopup} onClose={handleOverlayAndCrossClick} submit={handleDeleteCardSubmit} />
+            <EditAvatarPopup 
+                isOpen={avatarPopup} 
+                onClose={handleOverlayAndCrossClick} 
+                submit={handleUserAvatarUpdate} 
+            />
+            <EditProfilePopup 
+                isOpen={profilePopup} 
+                onClose={handleOverlayAndCrossClick} 
+                submit={handleUserInfoUpdate} 
+            />
+            <AddPlacePopup 
+                isOpen={cardPopup} 
+                onClose={handleOverlayAndCrossClick} 
+                submit={handleAddPlaceSubmit} 
+            />
+            <DeletePlacePopup 
+                isOpen={deletePopup} 
+                onClose={handleOverlayAndCrossClick} 
+                submit={handleDeleteCardSubmit} 
+            />
             <ImagePopup 
                 isOpen={imagePopup}
                 card={selectedCard}
