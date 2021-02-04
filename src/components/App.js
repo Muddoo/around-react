@@ -5,6 +5,7 @@ import Main from './Main'
 import Footer from './Footer'
 import EditAvatarPopup from './EditAvatarPopup'
 import EditProfilePopup from './EditProfilePopup'
+import AddPlacePopup from './AddPlacePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
@@ -73,24 +74,24 @@ function App() {
                 })
                 .finally(() => closeAllPopups())
         }
-        if(name === 'card') {
-            api.queryCards({ method: 'POST', body: card })
-                .then(place => {
-                   setCards([place,...cards]);
-                })
-                .catch(err => console.log(err))
-                .finally(() => closeAllPopups())
-        }
     }
-    function onUserAvatarUpdate(field) {
+    function handleUserAvatarUpdate(field) {
         api.updateProfile({ avatar: 'avatar', body: field })
             .then(user => setCurrentUser(user))
             .catch(err => console.log(err))
             .finally(() => closeAllPopups())
     }
-    function onUserInfoUpdate(field) {
+    function handleUserInfoUpdate(field) {
         api.updateProfile({body: field})
             .then(user => setCurrentUser(user))
+            .catch(err => console.log(err))
+            .finally(() => closeAllPopups())
+    }
+    function handleAddPlaceSubmit(field) {
+        api.queryCards({ method: 'POST', body: field })
+            .then(place => {
+            setCards([place,...cards]);
+            })
             .catch(err => console.log(err))
             .finally(() => closeAllPopups())
     }
@@ -119,18 +120,9 @@ function App() {
                 onCardLike={onCardUpdate}
             />
             <Footer />
-            <EditAvatarPopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={onUserAvatarUpdate} />
-            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={onUserInfoUpdate} />
-            {/* <PopupWithForm 
-                title='New place' 
-                name='card' 
-                isOpen={cardPopup}
-                onClose={handleOverlayAndCrossClick}
-                inputs={[['text','Title','name',2,30],['url','Image link','link']]}
-                submitText='Create'
-                submit={onCardUpdate}
-            /> */}
-            {/* <AddNewPlacePopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={onUserAvatarUpdate} > */}
+            <EditAvatarPopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={handleUserAvatarUpdate} />
+            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={handleUserInfoUpdate} />
+            <AddPlacePopup isOpen={cardPopup} onClose={handleOverlayAndCrossClick} submit={handleAddPlaceSubmit} />
             {/* <PopupWithForm 
                 title='Are you sure?' 
                 name='delete' 
