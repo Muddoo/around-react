@@ -28,14 +28,14 @@ function App() {
                .catch(err => console.log(err))
     },[])
 
-    function handleEditAvatarClick(isSubmit) {
-        setAvatarPopup(() => isSubmit);
+    function handleEditAvatarClick() {
+        setAvatarPopup(true)
     }
-    function handleEditProfileClick(isSubmit) {
-        setProfilePopup(() => isSubmit)
+    function handleEditProfileClick() {
+        setProfilePopup(true)
     }
-    function handleAddPlaceClick(isSubmit) {
-        setCardPopup(() => isSubmit)
+    function handleAddPlaceClick() {
+        setCardPopup(true)
     }
     function handleCardClick(card) {
         setImagePopup(true)
@@ -104,11 +104,6 @@ function App() {
     }
     function handleOverlayAndCrossClick(e) {
         if(e.target.classList.contains('popup') || e.target.classList.contains('popup__close')) closeAllPopups();
-    }
-    function handleImagePopupClick() {
-        const index = cards.indexOf(selectedCard) + 1;
-        if(index === cards.length) return setSelectedCard(cards[0])
-        setSelectedCard(cards[index])
     }
 
   return (

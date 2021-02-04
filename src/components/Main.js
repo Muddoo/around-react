@@ -18,8 +18,7 @@ function Main(props) {
                         draggable="false"  
                         alt="profile image" 
                         className="profile__image" 
-                        onLoad={handleLoadedAvatar}
-                        onError={handleUnloadedAvatar}
+                        onLoad={() => setIsLoaded(true)}
                     />
                 </div>
                 <div className="profile__info">
@@ -29,15 +28,10 @@ function Main(props) {
                         className="profile__edit-button" 
                         aria-label="edit-button" 
                         type="button" 
-                        onClick={handleEditProfile}
+                        onClick={onEditProfile}
                     />
                 </div>
-                <button 
-                    className="profile__add-button" 
-                    aria-label="close-button" 
-                    type="button" 
-                    onClick={handleAddPlace}
-                />
+                <button className="profile__add-button" aria-label="close-button" type="button" onClick={onAddPlace} />
             </section>
             <section className='cards'>
                 {cards.map(card => ( 
