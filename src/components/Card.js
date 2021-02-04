@@ -25,7 +25,7 @@ function Card(props) {
                     type="button" 
                     aria-label="heart-button" 
                     title="like"
-                    onClick={() => onCardLike(card)}
+                    onClick={() => onCardLike('like',card)}
                 />
                 <span className="card__likes">{card.likes.length}</span>
             </div>

@@ -1,12 +1,25 @@
-import { useState } from 'react';
+import {useState, useEffect, useRef} from 'react'
 import Input from './Input'
 
 function PopupWithForm(props) {
     const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
+
+    const [field,setField] = useState();
+    const [error,setError] = useState();
+
+    const activeButton = useRef();
+    useEffect(() => isOpen && activeButton.current.focus(),[isOpen]);
+
+    function handleChange(e) {
+      setField({...field, [e.target.name]: e.target.value.trim() && e.target.value});
+      setError({...error, [e.target.name]: e.target.validationMessage})
+    }
+
     function handleSubmit(e) {
       e.preventDefault();
-      e.target.textContent = 'Saving...'
-      submit(onClose);
+      e.target.textContent = 'Saving...';
+      submit(name, field);
+      setField()
     }
     return (
       <div 
@@ -24,6 +37,9 @@ function PopupWithForm(props) {
                   name={name}
                   min={min}
                   max={max}
+                  value={field?.[name] || ''}
+                  error={error?.[name]}
+                  onChange={handleChange}
                 />
               ))}
               <button 
@@ -31,6 +47,7 @@ function PopupWithForm(props) {
                   className="popup__submit active" 
                   aria-label="submit-button"
                   onClick={handleSubmit}
+                  ref={activeButton}
               >
                     {isOpen && submitText}
               </button>
