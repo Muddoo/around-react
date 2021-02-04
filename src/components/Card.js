@@ -1,5 +1,14 @@
+import {useContext} from 'react'
+import CurrentUserContext from '../contexts/CurrentUserContext'
 function Card(props) {
-    const {card,onCardClick,handleReady,onCardDelete,isOwner,isLiked,onCardLike,onImageFailure} = props;
+    const {card,onCardClick,onCardDelete,onCardLike} = props;
+
+
+    const user = useContext(CurrentUserContext);
+
+    const isOwner = user._id === card.owner._id;
+    const isLiked = card.likes.some(data => data._id === user._id);
+
     return (
         <div className="card">
             <img 
@@ -8,17 +17,15 @@ function Card(props) {
                 alt="card image" 
                 className="card__image" 
                 onClick={() => onCardClick(card)}
-                onLoad={handleReady}
-                onError={() => onImageFailure(card)}
             />
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>
                 <button 
-                    className={`card__icon-heart ${isLiked(card) && 'card__icon-heart_black animate'}`}
+                    className={`card__icon-heart ${isLiked && 'card__icon-heart_black animate'}`}
                     type="button" 
                     aria-label="heart-button" 
                     title="like"
-                    onClick={() => onCardLike(card)}
+                    onClick={() => onCardLike('like',card)}
                 />
                 <span className="card__likes">{card.likes.length}</span>
             </div>
@@ -28,7 +35,7 @@ function Card(props) {
                 aria-label="trash-button" 
                 title="delete"
                 onClick={() => onCardDelete(card)}
-                hidden={!isOwner(card)}
+                hidden={!isOwner}
             />
         </div>
     )
