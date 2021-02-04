@@ -48,6 +48,7 @@ function Main(props) {
     function apiRemove(card) {
         const newCards = cards.filter(cardArr => cardArr._id !== card._id);
             setCards(newCards);
+            cardsInfo(newCards);
             const options = {
             query: card._id,
             method: 'DELETE'
@@ -57,6 +58,7 @@ function Main(props) {
                .catch(err => {
                     console.log(err);
                     setCards(cards);
+                    cardsInfo(cards);
                     onCardDelete(false);
                 });
     }
