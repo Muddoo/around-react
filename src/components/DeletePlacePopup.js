@@ -1,0 +1,23 @@
+import PopupWithForm from './PopupWithForm'
+
+function DeletePlacePopup(props) {
+    const {isOpen,onClose,submit} = props;
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        e.target.textContent = 'Saving...';
+        submit();
+    }
+    return (
+        <PopupWithForm 
+            title='Are you sure?' 
+            name='delete' 
+            isOpen={isOpen}
+            onClose={onClose}
+            submitText='Yes'
+            submit={handleSubmit}
+        />
+    )
+}
+
+export default DeletePlacePopup

@@ -5,6 +5,7 @@ import Main from './Main'
 import Footer from './Footer'
 import EditAvatarPopup from './EditAvatarPopup'
 import EditProfilePopup from './EditProfilePopup'
+import DeletePlacePopup from './DeletePlacePopup'
 import AddPlacePopup from './AddPlacePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
@@ -52,29 +53,6 @@ function App() {
         if(index === cards.length) index = 0; 
         setSelectedCard(cards[index])
     }
-    function onCardUpdate(name, card = selectedCard) {
-        if(name === 'like') {
-            const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
-            const newLike = method === 'DELETE' ? card.likes.filter(item => item._id !== currentUser._id) : [...card.likes, {_id: currentUser._id}];
-            const newCards = cards.map(item => card._id === item._id ? {...item,likes: newLike} : item);
-            setCards(newCards);
-            api.queryCards({ query: `likes/${card._id}`, method })
-               .catch(err => {
-                   console.log(err);
-                   setCards(cards)
-               })
-        }
-        if(name === 'delete') {
-            const newCards = cards.filter(item => item._id !== card._id);
-            setCards(newCards);
-            api.queryCards({query: card._id, method: 'DELETE'})
-               .catch(err => {
-                  console.log(err);
-                  setCards(cards);
-                })
-                .finally(() => closeAllPopups())
-        }
-    }
     function handleUserAvatarUpdate(field) {
         api.updateProfile({ avatar: 'avatar', body: field })
             .then(user => setCurrentUser(user))
@@ -94,6 +72,37 @@ function App() {
             })
             .catch(err => console.log(err))
             .finally(() => closeAllPopups())
+    }
+    function handleDeleteCardSubmit() {
+        const newCards = cards.filter(item => item._id !== selectedCard._id);
+            api.queryCards({query: selectedCard._id, method: 'DELETE'})
+               .then(() => setCards(newCards))
+               .catch(err => {
+                  console.log(err);
+                  setCards(cards);
+                })
+               .finally(() => closeAllPopups())
+    }
+    function handleLikeClick(card) {
+        // const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
+        // const newLike = method === 'DELETE' ? card.likes.filter(item => item._id !== currentUser._id) : [...card.likes, {_id: currentUser._id}];
+        // const newCards = cards.map(item => card._id === item._id ? {...item,likes: newLike} : item);
+        // setCards(newCards);
+        // api.queryCards({ query: `likes/${card._id}`, method })
+        //     .catch(err => {
+        //         console.log(err);
+        //         setCards(cards)
+        //     })
+        const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
+        api.queryCards({ query: `likes/${card._id}`, method })
+            .then(newCard => {
+                const newCards = cards.map(old => old._id === newCard._id ? newCard : old);
+                setCards(newCards);
+            })
+            .catch(err => {
+                console.log(err);
+                setCards(cards)
+            })
     }
     function closeAllPopups() {
             setAvatarPopup(false);
@@ -117,20 +126,13 @@ function App() {
                 onAddPlace={handleAddPlaceClick}
                 onCardClick={handleCardClick}
                 onCardDelete={handleCardDelete}
-                onCardLike={onCardUpdate}
+                onCardLike={handleLikeClick}
             />
             <Footer />
             <EditAvatarPopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={handleUserAvatarUpdate} />
             <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={handleUserInfoUpdate} />
             <AddPlacePopup isOpen={cardPopup} onClose={handleOverlayAndCrossClick} submit={handleAddPlaceSubmit} />
-            {/* <PopupWithForm 
-                title='Are you sure?' 
-                name='delete' 
-                isOpen={deletePopup}
-                onClose={handleOverlayAndCrossClick}
-                submitText='Yes'
-                submit={onCardUpdate}
-            /> */}
+            <DeletePlacePopup isOpen={deletePopup} onClose={handleOverlayAndCrossClick} submit={handleDeleteCardSubmit} />
             <ImagePopup 
                 isOpen={imagePopup}
                 card={selectedCard}
