@@ -82,20 +82,26 @@ function App() {
                 .finally(() => closeAllPopups())
         }
     }
-    function onUserUpdate(name, field) {
-        if(name === 'profile-info') {
-            api.updateProfile({body: field})
-               .then(user => setCurrentUser(user))
-               .catch(err => console.log(err))
-               .finally(() => closeAllPopups())
-        }
-        if(name === 'profile-photo') {
-            api.updateProfile({ avatar: 'avatar', body: field })
-               .then(user => setCurrentUser(user))
-               .catch(err => console.log(err))
-               .finally(() => closeAllPopups())
-        }
+    function onUserInfoUpdate(field) {
+        api.updateProfile({body: field})
+            .then(user => setCurrentUser(user))
+            .catch(err => console.log(err))
+            .finally(() => closeAllPopups())
     }
+    // function onUserUpdate(name, field) {
+    //     if(name === 'profile-info') {
+    //         api.updateProfile({body: field})
+    //            .then(user => setCurrentUser(user))
+    //            .catch(err => console.log(err))
+    //            .finally(() => closeAllPopups())
+    //     }
+    //     if(name === 'profile-photo') {
+    //         api.updateProfile({ avatar: 'avatar', body: field })
+    //            .then(user => setCurrentUser(user))
+    //            .catch(err => console.log(err))
+    //            .finally(() => closeAllPopups())
+    //     }
+    // }
     function closeAllPopups() {
             setAvatarPopup(false);
             setProfilePopup(false);
@@ -121,7 +127,7 @@ function App() {
                 onCardLike={onCardUpdate}
             />
             <Footer />
-            <PopupWithForm 
+            {/* <PopupWithForm 
                 title='Change profile picture' 
                 name='profile-photo' 
                 isOpen={avatarPopup}
@@ -129,9 +135,9 @@ function App() {
                 inputs={[['url','Image link','avatar']]}
                 submitText='Save'
                 submit={onUserUpdate}
-            />
-            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={onUserUpdate} />
-            <PopupWithForm 
+            /> */}
+            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={onUserInfoUpdate} />
+            {/* <PopupWithForm 
                 title='New place' 
                 name='card' 
                 isOpen={cardPopup}
@@ -139,15 +145,15 @@ function App() {
                 inputs={[['text','Title','name',2,30],['url','Image link','link']]}
                 submitText='Create'
                 submit={onCardUpdate}
-            />
-            <PopupWithForm 
+            /> */}
+            {/* <PopupWithForm 
                 title='Are you sure?' 
                 name='delete' 
                 isOpen={deletePopup}
                 onClose={handleOverlayAndCrossClick}
                 submitText='Yes'
                 submit={onCardUpdate}
-            />
+            /> */}
             <ImagePopup 
                 isOpen={imagePopup}
                 card={selectedCard}

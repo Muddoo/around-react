@@ -1,14 +1,14 @@
 import {useState, useEffect, useContext, useRef} from 'react'
 import Input from './Input'
-import CurrentUserContext from '../contexts/CurrentUserContext'
+// import CurrentUserContext from '../contexts/CurrentUserContext'
 
 function PopupWithForm(props) {
-    const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
+    const {name,title,isOpen,onClose,submitText,inputs,submit,field,error,onChange,submitButtonState} = props;
 
-    const user = useContext(CurrentUserContext);
+    // const user = useContext(CurrentUserContext);
 
-    const [field,setField] = useState();
-    const [error,setError] = useState();
+    // const [field,setField] = useState();
+    // const [error,setError] = useState();
 
     const activeButton = useRef();
 
@@ -16,45 +16,25 @@ function PopupWithForm(props) {
       if(isOpen) {
         activeButton.current.focus()
       }
-      if(isOpen && name === 'profile-info') {
-        const newField = {};
-        const newError = {};
-        inputs.forEach(([,,name]) => {
-          newField[name] = user[name];
-          newError[name] = '';
-        });
-        setField(newField);
-        setError(newError);
-      }
-      else if(isOpen && inputs) {
-        const newField = {};
-        const newError = {};
-        inputs.forEach(([,,name]) => {
-          newField[name] = '';
-          newError[name] = '';
-        });
-        setField(newField);
-        setError(newError);
-      }
-    },[isOpen,user]);
+    },[isOpen]);
 
-    function handleChange(e) {
-      setField({...field, [e.target.name]: e.target.value.trim() && e.target.value});
-      setError({...error, [e.target.name]: e.target.validationMessage})
-    }
+    // function handleChange(e) {
+    //   setField({...field, [e.target.name]: e.target.value.trim() && e.target.value});
+    //   setError({...error, [e.target.name]: e.target.validationMessage})
+    // }
 
-    function setButtonState() {
-      if(!field) return false
-      const isField = Object.values(field).every(field => field !== '');
-      const isError = Object.values(error).some(error => error !== '');
-      return isError || !isField
-    }
+    // function setButtonState() {
+    //   if(!field) return false
+    //   const isField = Object.values(field).every(field => field !== '');
+    //   const isError = Object.values(error).some(error => error !== '');
+    //   return isError || !isField
+    // }
 
-    function handleSubmit(e) {
-      e.preventDefault();
-      e.target.textContent = 'Saving...';
-      submit(name, field);
-    }
+    // function handleSubmit(e) {
+    //   e.preventDefault();
+    //   e.target.textContent = 'Saving...';
+    //   submit(name, field);
+    // }
     return (
       <div 
         className={`popup popup_${name} ${isOpen && 'visible'}`} 
@@ -71,18 +51,18 @@ function PopupWithForm(props) {
                   name={name}
                   min={min}
                   max={max}
-                  value={field?.[name] || ''}
-                  error={error?.[name]}
-                  onChange={handleChange}
+                  value={field[name] || ''}
+                  error={error[name]}
+                  onChange={onChange}
                 />
               ))}
               <button 
                   type="submit" 
-                  className={`popup__submit active ${setButtonState() && 'inactive'}`} 
+                  className={`popup__submit active ${submitButtonState && 'inactive'}`} 
                   aria-label="submit-button"
-                  onClick={handleSubmit}
+                  onClick={submit}
                   ref={activeButton}
-                  disabled={setButtonState()}
+                  disabled={submitButtonState}
               >
                     {isOpen && submitText}
               </button>
