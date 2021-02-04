@@ -3,7 +3,7 @@ import logo from '../images/Vectorlogo.svg'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
-import PopupWithForm from './PopupWithForm'
+import EditAvatarPopup from './EditAvatarPopup'
 import EditProfilePopup from './EditProfilePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
@@ -82,26 +82,18 @@ function App() {
                 .finally(() => closeAllPopups())
         }
     }
+    function onUserAvatarUpdate(field) {
+        api.updateProfile({ avatar: 'avatar', body: field })
+            .then(user => setCurrentUser(user))
+            .catch(err => console.log(err))
+            .finally(() => closeAllPopups())
+    }
     function onUserInfoUpdate(field) {
         api.updateProfile({body: field})
             .then(user => setCurrentUser(user))
             .catch(err => console.log(err))
             .finally(() => closeAllPopups())
     }
-    // function onUserUpdate(name, field) {
-    //     if(name === 'profile-info') {
-    //         api.updateProfile({body: field})
-    //            .then(user => setCurrentUser(user))
-    //            .catch(err => console.log(err))
-    //            .finally(() => closeAllPopups())
-    //     }
-    //     if(name === 'profile-photo') {
-    //         api.updateProfile({ avatar: 'avatar', body: field })
-    //            .then(user => setCurrentUser(user))
-    //            .catch(err => console.log(err))
-    //            .finally(() => closeAllPopups())
-    //     }
-    // }
     function closeAllPopups() {
             setAvatarPopup(false);
             setProfilePopup(false);
@@ -127,15 +119,7 @@ function App() {
                 onCardLike={onCardUpdate}
             />
             <Footer />
-            {/* <PopupWithForm 
-                title='Change profile picture' 
-                name='profile-photo' 
-                isOpen={avatarPopup}
-                onClose={handleOverlayAndCrossClick}
-                inputs={[['url','Image link','avatar']]}
-                submitText='Save'
-                submit={onUserUpdate}
-            /> */}
+            <EditAvatarPopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={onUserAvatarUpdate} />
             <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={onUserInfoUpdate} />
             {/* <PopupWithForm 
                 title='New place' 
@@ -146,6 +130,7 @@ function App() {
                 submitText='Create'
                 submit={onCardUpdate}
             /> */}
+            {/* <AddNewPlacePopup isOpen={avatarPopup} onClose={handleOverlayAndCrossClick} submit={onUserAvatarUpdate} > */}
             {/* <PopupWithForm 
                 title='Are you sure?' 
                 name='delete' 
