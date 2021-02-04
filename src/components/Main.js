@@ -8,10 +8,7 @@ function Main(props) {
            onAddPlace,
            onCardClick,
            onCardDelete,
-           avatarInfo,
-           profileInfo,
-           newPlace,
-           deletePlace} = props;
+           cardsInfo} = props;
     const [userId,setUserId] = useState('')
     const [userName,setUserName] = useState('')
     const [userDescription,setUserDescription] = useState('')
@@ -19,9 +16,6 @@ function Main(props) {
     const [originalAvatar,setOriginalAvatar] = useState('')
     const [cards,setCards] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
-    const [Liked,setLiked] = useState(false)
-    const [deleteCard,setDeleteCard] = useState(false)
-    const [unLoadedImage,setUnloadedImage] = useState(false)
     
     useEffect(() => {
         Promise.all([api.getUser(),api.queryCards({})])
@@ -32,110 +26,92 @@ function Main(props) {
                    setUserDescription(user.about);
                    setUserAvatar(user.avatar);
                    setCards(initialCards)
+                   cardsInfo(initialCards)
                })
                .catch(err => console.log(err))
     },[])
 
-    useEffect(() => {
-        if(avatarInfo) {
-            const options = {
-                avatar: 'avatar',
-                body: avatarInfo
-            };
-            api.updateProfile(options)
-            .then(({avatar}) => {
-                setUserAvatar(avatar);
-                onEditAvatar();
-            })
-            .catch(err => console.log(err));
+    function apiAvatar(fields) {
+        if(fields.avatar === userAvatar) return onEditAvatar(false);
+        if(fields.avatar !== userAvatar) setIsLoaded(false);
+        const options = {
+            avatar: 'avatar',
+            body: fields
         };
-    },[avatarInfo])
-    useEffect(() => {
-        if(profileInfo) {
-            const options = {body: profileInfo};
-            api.updateProfile(options)
-           .then(user => {
-                setUserName(user.name);
-                setUserDescription(user.about);
-                onEditProfile();
-           })
-           .catch(err => console.log(err));
-        };
-    },[profileInfo])
-    useEffect(() => {
-        if(newPlace) {
-            const options = {
-                method: 'POST',
-                body: newPlace
-            };
-            api.queryCards(options)
-            .then(place => {
-                setCards([place,...cards]);
-                onAddPlace();
-            })
-            .catch(err => console.log(err));
-        };
-    },[newPlace])
-    useEffect(() => {
-        if(deletePlace) {
-            const newCards = cards.filter(card => card._id !== deleteCard._id);
+        api.updateProfile(options)
+        .then(({avatar}) => {
+            setUserAvatar(avatar);
+            isLoaded && onEditAvatar(false);
+        })
+        .catch(err => console.log(err));
+    }
+    function apiRemove(card) {
+        const newCards = cards.filter(cardArr => cardArr._id !== card._id);
             setCards(newCards);
-            onCardDelete();
             const options = {
-            query: deleteCard._id,
+            query: card._id,
             method: 'DELETE'
             };
-            api.queryCards(options).catch(err => console.log(err));
-        }
-    },[deletePlace])
-    useEffect(() => {
-        if(unLoadedImage) {
-            const newCards = cards.filter(card => card._id !== unLoadedImage._id);
-            setCards(newCards);
+            api.queryCards(options)
+               .then(() => onCardDelete(false))
+               .catch(err => {
+                    console.log(err);
+                    setCards(cards);
+                    onCardDelete(false);
+                });
+    }
+
+    function handleEditAvatar() {
+        onEditAvatar(apiAvatar)
+    }
+    function handleEditProfile() {
+        onEditProfile((fields) => {
+            const options = {body: fields};
+            api.updateProfile(options)
+               .then(user => {
+                        setUserName(user.name);
+                        setUserDescription(user.about);
+                        onEditProfile(false);
+                })
+               .catch(err => console.log(err));
+        })
+    }
+    function handleAddPlace() {
+        onAddPlace((fields) => {
             const options = {
-                query: unLoadedImage._id,
-                method: 'DELETE'
-              };
-            api.queryCards(options).catch(err => console.log(err));
-        }
-    },[unLoadedImage])
-    useEffect(() => {
-        if(Liked) {
-            const method = isLiked(Liked) ? 'DELETE' : 'PUT';
+                method: 'POST',
+                body: fields
+            };
+            api.queryCards(options)
+               .then(place => {
+                    setCards([place,...cards]);
+                    onAddPlace(false);
+                })
+               .catch(err => console.log(err));
+        })
+    }
+
+    function handleCardDelete(card) {
+        onCardDelete(() => apiRemove(card));
+    }
+
+    function handleCardLike(liked) {
+        const method = isLiked(liked) ? 'DELETE' : 'PUT';
             const options = {
-                query: `likes/${Liked._id}`,
+                query: `likes/${liked._id}`,
                 method
             }; 
             api.queryCards(options)
-            //    .then(res => {
-            //        const newCards = cards.map(card => card._id === res._id ? res : card);
-            //        setCards(newCards)
-            //    })
                .catch(err => {
                    console.log(err);
                    setCards(cards)
                 })
             const newCards = cards.map(card => {
-                const newLikes =  method === 'PUT' ? [...Liked.likes,{_id: userId}] : Liked.likes.filter(like => like._id !== userId)
-                if(Liked._id === card._id) return {...card,likes: newLikes}
+                const newLikes =  method === 'PUT' ? [...liked.likes,{_id: userId}] : liked.likes.filter(like => like._id !== userId)
+                if(liked._id === card._id) return {...card,likes: newLikes}
                 return card
             });
-            setCards(newCards)    
-        }
-    },[Liked])
-
-
-    function handleCardLike(card) {
-        setLiked(card)
-    }
-
-    function handleCardDelete(card) {
-        onCardDelete();
-        setDeleteCard(card);
-    }
-
-    function handleUnloadedImage(card) {
-        setUnloadedImage(card);
+            setCards(newCards) 
     }
 
     function handleLoadedAvatar() {
@@ -145,15 +121,7 @@ function Main(props) {
 
     function handleUnloadedAvatar() {
         if(!originalAvatar) return;
-        const options = {
-            avatar: 'avatar',
-            body: {avatar: originalAvatar}
-        };
-        api.updateProfile(options)
-        .then(({avatar}) => {
-            setUserAvatar(avatar);
-        })
-        .catch(err => console.log(err));
+        apiAvatar({avatar: originalAvatar});
     }
 
     function profileShow() {
@@ -170,8 +138,8 @@ function Main(props) {
 
     return (
         <main>
-            <section className={`profile ${profileShow() ? null : 'hidden'}`} >
-                <div className="profile__wrapper" onClick={onEditAvatar}>
+            <section className={`profile ${!profileShow() && 'hidden'}`} >
+                <div className="profile__wrapper" onClick={handleEditAvatar}>
                     <img 
                         src={userAvatar} 
                         draggable="false"  
@@ -188,20 +156,24 @@ function Main(props) {
                         className="profile__edit-button" 
                         aria-label="edit-button" 
                         type="button" 
-                        onClick={onEditProfile}
+                        onClick={handleEditProfile}
                     />
                 </div>
-                <button className="profile__add-button" aria-label="close-button" type="button" onClick={onAddPlace} />
+                <button 
+                    className="profile__add-button" 
+                    aria-label="close-button" 
+                    type="button" 
+                    onClick={handleAddPlace}
+                />
             </section>
             <Cards 
                 cards={cards} 
-                userId={userId} 
                 isOwner={isOwner}
                 isLiked={isLiked}
                 onCardClick={onCardClick} 
                 onCardDelete={handleCardDelete}
                 onCardLike={handleCardLike}
-                onImageFailure={handleUnloadedImage}
+                onImageFailure={apiRemove}
             />
         </main>
     )

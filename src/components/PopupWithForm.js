@@ -1,10 +1,10 @@
-import {useState,useEffect,createRef} from 'react'
+import {useState,useEffect,useRef} from 'react'
 import Input from './Input'
 
 function PopupWithForm(props) {
-    const {name,title,isOpen,onClose,submitText,inputs,submit} = props;
+    const {name,title,isOpen,onClose,submitText,inputs} = props;
 
-    const form = createRef();
+    const form = useRef();
     const [fields,setFields] = useState({});
     const [errors,setErrors] = useState({});
     const [buttonText,setButtonText] = useState(submitText);
@@ -36,7 +36,7 @@ function PopupWithForm(props) {
 
     function handleSubmit(e) {
       e.preventDefault();
-      submit(fields);
+      isOpen(fields);
       setButtonText('Saving...')
     }
 
