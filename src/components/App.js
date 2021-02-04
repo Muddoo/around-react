@@ -84,15 +84,6 @@ function App() {
                .finally(() => closeAllPopups())
     }
     function handleLikeClick(card) {
-        // const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
-        // const newLike = method === 'DELETE' ? card.likes.filter(item => item._id !== currentUser._id) : [...card.likes, {_id: currentUser._id}];
-        // const newCards = cards.map(item => card._id === item._id ? {...item,likes: newLike} : item);
-        // setCards(newCards);
-        // api.queryCards({ query: `likes/${card._id}`, method })
-        //     .catch(err => {
-        //         console.log(err);
-        //         setCards(cards)
-        //     })
         const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
         api.queryCards({ query: `likes/${card._id}`, method })
             .then(newCard => {

@@ -1,7 +1,11 @@
+import {useRef, useEffect} from 'react'
 import PopupWithForm from './PopupWithForm'
 
 function DeletePlacePopup(props) {
     const {isOpen,onClose,submit} = props;
+    const activeButton = useRef();
+
+    useEffect(() => isOpen && activeButton.current.focus(),[isOpen])
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -16,6 +20,7 @@ function DeletePlacePopup(props) {
             onClose={onClose}
             submitText='Yes'
             submit={handleSubmit}
+            refButton={activeButton}
         />
     )
 }
