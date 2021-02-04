@@ -7,14 +7,11 @@ function Main(props) {
 
     const user = useContext(CurrentUserContext)
     const [isLoaded,setIsLoaded] = useState(false)
-
-    function isReady() {
-        return user && isLoaded && true
-    }
+    const isReady =  user && isLoaded && true;
 
     return (
         <main>
-            <section className={`profile ${isReady() || 'hidden'}`} >
+            <section className={`profile ${isReady || 'hidden'}`} >
                 <div className="profile__wrapper" onClick={onEditAvatar}>
                     <img 
                         src={user?.avatar} 

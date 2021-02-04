@@ -45,6 +45,11 @@ function App() {
         setDeletePopup(true);
         setSelectedCard(card);
     }
+    function handleImagePopupClick() {
+        let index = cards.indexOf(selectedCard) + 1;
+        if(index === cards.length) index = 0; 
+        setSelectedCard(cards[index])
+    }
     function onCardUpdate(name, card = selectedCard) {
         if(name === 'like') {
             const method = card.likes.some(data => data._id === currentUser._id) ? 'DELETE' : 'PUT';
@@ -74,6 +79,20 @@ function App() {
                 })
                 .catch(err => console.log(err))
                 .finally(() => closeAllPopups())
+        }
+    }
+    function onUserUpdate(name, field) {
+        if(name === 'profile-info') {
+            api.updateProfile({body: field})
+               .then(user => setCurrentUser(user))
+               .catch(err => console.log(err))
+               .finally(() => closeAllPopups())
+        }
+        if(name === 'profile-photo') {
+            api.updateProfile({ avatar: 'avatar', body: field })
+               .then(user => setCurrentUser(user))
+               .catch(err => console.log(err))
+               .finally(() => closeAllPopups())
         }
     }
     function closeAllPopups() {
@@ -106,8 +125,9 @@ function App() {
                 name='profile-photo' 
                 isOpen={avatarPopup}
                 onClose={handleOverlayAndCrossClick}
-                inputs={[['url','Image link','profile-image']]}
+                inputs={[['url','Image link','avatar']]}
                 submitText='Save'
+                submit={onUserUpdate}
             />
             <PopupWithForm 
                 title='Edit profile' 
@@ -116,6 +136,7 @@ function App() {
                 onClose={handleOverlayAndCrossClick}
                 inputs={[['text','Name','name',2,40],['text','About me','about',2,200]]}
                 submitText='Save'
+                submit={onUserUpdate}
             />
             <PopupWithForm 
                 title='New place' 
@@ -138,6 +159,7 @@ function App() {
                 isOpen={imagePopup}
                 card={selectedCard}
                 onClose={handleOverlayAndCrossClick}
+                onClick={handleImagePopupClick}
             />
         </CurrentUserContext.Provider>
     </div>
