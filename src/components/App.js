@@ -4,6 +4,7 @@ import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 import PopupWithForm from './PopupWithForm'
+import EditProfilePopup from './EditProfilePopup'
 import ImagePopup from './ImagePopup'
 import api from '../utils/api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
@@ -129,15 +130,7 @@ function App() {
                 submitText='Save'
                 submit={onUserUpdate}
             />
-            <PopupWithForm 
-                title='Edit profile' 
-                name='profile-info' 
-                isOpen={profilePopup}
-                onClose={handleOverlayAndCrossClick}
-                inputs={[['text','Name','name',2,40],['text','About me','about',2,200]]}
-                submitText='Save'
-                submit={onUserUpdate}
-            />
+            <EditProfilePopup isOpen={profilePopup} onClose={handleOverlayAndCrossClick} submit={onUserUpdate} />
             <PopupWithForm 
                 title='New place' 
                 name='card' 
