@@ -14,7 +14,7 @@ function Card(props) {
             <img 
                 src={card.link} 
                 draggable="false" 
-                alt="card image" 
+                alt={card.name} 
                 className="card__image" 
                 onClick={() => onCardClick(card)}
             />
