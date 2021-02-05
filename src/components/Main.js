@@ -1,14 +1,20 @@
-import {useState,useContext} from 'react'
+import {useState,useContext, useEffect} from 'react'
 import Card from './Card'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 
 function Main(props) {
-    const {cards,onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete,onCardLike} = props;
+    const {cards,onEditAvatar,onEditProfile,onAddPlace,onCardClick,onCardDelete,onCardLike,onUnloadedAvatar,onUnLoadedImage} = props;
 
     const user = useContext(CurrentUserContext)
+    const [originalAvatar,setOriginalAvatar] = useState()
     const [isLoaded,setIsLoaded] = useState(false)
     const [isCardsLoaded,setIsCardsLoaded] = useState(0)
-    const isReady =  user && isLoaded && true;
+    const isReady =  user && isLoaded && true
+
+    useEffect(() => {
+        if(isLoaded) return setOriginalAvatar(user.avatar);
+        if(originalAvatar) onUnloadedAvatar({avatar: originalAvatar})
+    },[isLoaded])
 
     function handleCardLoading() {
         setIsCardsLoaded(isCardsLoaded + 1)
@@ -29,6 +35,7 @@ function Main(props) {
                         alt="profile image" 
                         className="profile__image" 
                         onLoad={() => setIsLoaded(true)}
+                        onError={() => setIsLoaded(false)}
                     />
                 </div>
                 <div className="profile__info">
@@ -52,6 +59,7 @@ function Main(props) {
                         onCardDelete={onCardDelete} 
                         onCardLike={onCardLike}
                         loading={i < 7 ? handleCardLoading : null}
+                        onUnLoadedImage={onUnLoadedImage}
                     />
                 ))}
             </section>

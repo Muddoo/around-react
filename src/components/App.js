@@ -73,9 +73,9 @@ function App() {
             .catch(err => console.log(err))
             .finally(() => closeAllPopups())
     }
-    function handleDeleteCardSubmit() {
-        const newCards = cards.filter(item => item._id !== selectedCard._id);
-            api.queryCards({query: selectedCard._id, method: 'DELETE'})
+    function handleDeleteCardSubmit(card = selectedCard) {
+        const newCards = cards.filter(item => item._id !== card._id);
+            api.queryCards({query: card._id, method: 'DELETE'})
                .then(() => setCards(newCards))
                .catch(err => {
                   console.log(err);
@@ -93,6 +93,9 @@ function App() {
                 console.log(err);
                 setCards(cards)
             })
+    }
+    function handleUnloadedImage(card) {
+        handleDeleteCardSubmit(card);
     }
     function closeAllPopups() {
             setAvatarPopup(false);
@@ -117,6 +120,8 @@ function App() {
                 onCardClick={handleCardClick}
                 onCardDelete={handleCardDelete}
                 onCardLike={handleLikeClick}
+                onUnLoadedImage={handleUnloadedImage}
+                onUnloadedAvatar={handleUserAvatarUpdate}
             />
             <Footer />
             <EditAvatarPopup 
