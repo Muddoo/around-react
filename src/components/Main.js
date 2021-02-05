@@ -7,7 +7,17 @@ function Main(props) {
 
     const user = useContext(CurrentUserContext)
     const [isLoaded,setIsLoaded] = useState(false)
+    const [isCardsLoaded,setIsCardsLoaded] = useState(0)
     const isReady =  user && isLoaded && true;
+
+    function handleCardLoading() {
+        setIsCardsLoaded(isCardsLoaded + 1)
+    }
+
+    function showCards() {
+        if(cards.length < 7) return isCardsLoaded === cards.length 
+        return isCardsLoaded >= 7
+    }
 
     return (
         <main>
@@ -33,14 +43,15 @@ function Main(props) {
                 </div>
                 <button className="profile__add-button" aria-label="close-button" type="button" onClick={onAddPlace} />
             </section>
-            <section className='cards'>
-                {cards.map(card => ( 
+            <section className={`cards ${showCards() || 'hidden'}`}>
+                {cards.map((card, i) => ( 
                     <Card 
                         key={card._id} 
                         card={card} 
                         onCardClick={onCardClick} 
                         onCardDelete={onCardDelete} 
                         onCardLike={onCardLike}
+                        loading={i < 7 ? handleCardLoading : null}
                     />
                 ))}
             </section>

@@ -1,7 +1,7 @@
 import {useContext} from 'react'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 function Card(props) {
-    const {card,onCardClick,onCardDelete,onCardLike} = props;
+    const {card,onCardClick,onCardDelete,onCardLike,loading} = props;
 
 
     const user = useContext(CurrentUserContext);
@@ -17,6 +17,7 @@ function Card(props) {
                 alt={card.name} 
                 className="card__image" 
                 onClick={() => onCardClick(card)}
+                onLoad={loading}
             />
             <div className="card__details">
                 <h2 className="card__text">{card.name}</h2>
